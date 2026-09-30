@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something Special For You ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary-pink: #ff2d75;
+            --secondary-pink: #ff6b9d;
+            --accent-color: #ff006e;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #ffdee9;
+            background: linear-gradient(45deg, #ffdee9 0%, #b5fffc 100%);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            text-align: center;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><text y="15" font-size="15">❤️</text></svg>'), auto;
+        }
+
+        /* --- AMAZING BACKGROUND VISUALS --- */
+        #canvas-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp linear infinite;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(0.5); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); opacity: 0; }
+        }
+
+        /* --- CONTAINER DESIGN --- */
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 3.5rem 2rem;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1), 0 0 20px rgba(255, 45, 117, 0.2);
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.5s ease;
+            animation: appear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes appear {
+            from { opacity: 0; transform: scale(0.8) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        h1 {
+            color: var(--primary-pink);
+            font-size: 2.4rem;
+            margin-bottom: 2.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            position: relative;
+            min-height: 100px;
+        }
+
+        button {
+            padding: 16px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        #noBtn {
+            background: white;
+            color: var(--primary-pink);
+            border: 2px solid var(--primary-pink);
+        }
+
+        #noBtn:hover {
+            background: var(--primary-pink);
+            color: white;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(255, 45, 117, 0.3);
+        }
+
+        #yesBtn {
+            background: var(--primary-pink);
+            color: white;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(255, 45, 117, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 100;
+        }
+
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+            text-align: left;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: var(--text-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+
+        input {
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: 20px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+            background: rgba(255,255,255,0.5);
+        }
+
+        input:focus {
+            border-color: var(--primary-pink);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 45, 117, 0.1);
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 1.4rem;
+            padding: 18px;
+            border-radius: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            filter: brightness(1.1);
+            box-shadow: 0 15px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .msg {
+            font-size: 2.2rem;
+            color: var(--primary-pink);
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .container { padding: 2rem 1.5rem; }
+            button { padding: 14px 30px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body onclick="playPop()">
+
+    <!-- Canvas for dynamic particles -->
+    <canvas id="canvas-bg"></canvas>
+    <div id="bg-elements"></div>
+
+    <div class="container" id="mainContainer">
+        <div id="questionSection">
+            <h1 id="mainTitle">Do you have a boyfriend? 🤔</h1>
+            <div class="btn-group">
+                <button id="noBtn">No</button>
+                <button id="yesBtn">Yes</button>
+            </div>
+        </div>
+
+        <div id="infoSection" class="hidden">
+            <h1 class="msg">I'm so glad! 🥰</h1>
+            <p style="color: #777; margin-bottom: 25px; font-size: 1.1rem;">Tell me a little about yourself...</p>
+            <div class="info-section">
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="Your name...">
+                </div>
+                <div class="input-group">
+                    <label>What do you love doing?</label>
+                    <input type="text" id="hobby" placeholder="Hobbies, passion...">
+                </div>
+                <div class="input-group">
+                    <label>Something you love about America?</label>
+                    <input type="text" id="favorite" placeholder="Tell me something cute...">
+                </div>
+                <button id="submitInfo" class="submit-btn">Send to me ❤️</button>
+            </div>
+        </div>
+
+        <div id="finalSection" class="hidden">
+            <h1 class="msg">Perfect! ✨</h1>
+            <p style="font-size: 1.2rem; color: #666; line-height: 1.5;">Thank you for being so sweet! <br> I'll be thinking of you. ❤️</p>
+        </div>
+    </div>
+
+    <script>
+        // --- SOUNDS ---
+        const popSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3');
+        const tadaSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+
+        function playPop() {
+            popSound.currentTime = 0;
+            popSound.play().catch(() => {});
+        }
+
+        // --- BACKGROUND VISUALS: Particles ---
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 5 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.color = `rgba(255, ${Math.floor(Math.random()*100 + 150)}, ${Math.floor(Math.random()*100 + 180)}, ${Math.random()*0.5})`;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            for (let i = 0; i < 80; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        initParticles();
+        animateParticles();
+
+        // --- BACKGROUND VISUALS: Floating Emojis ---
+        const emojis = ['❤️', '💖', '✨', '🌸', '🥰', '🦋', '🍭', '🎀', '☁️', '⭐'];
+        function spawnEmoji() {
+            const el = document.createElement('div');
+            el.classList.add('floating-emoji');
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.fontSize = (Math.random() * 25 + 20) + 'px';
+            el.style.animationDuration = (Math.random() * 4 + 3) + 's';
+            el.style.opacity = Math.random() * 0.7 + 0.3;
+            document.getElementById('bg-elements').appendChild(el);
+            setTimeout(() => el.remove(), 7000);
+        }
+        setInterval(spawnEmoji, 400);
+
+        // --- INTERACTION LOGIC ---
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const mainTitle = document.getElementById('mainTitle');
+        const questionSection = document.getElementById('questionSection');
+        const infoSection = document.getElementById('infoSection');
+        const finalSection = document.getElementById('finalSection');
+        const submitBtn = document.getElementById('submitInfo');
+
+        const funnyTexts = ["Nope!", "Try again!", "Too slow!", "Catch me!", "Hehe!", "No way!", "Almost!", " Try again! ✨"];
+        let dodgeCount = 0;
+
+        function dodge() {
+            dodgeCount++;
+            playPop();
+            yesBtn.innerText = funnyTexts[Math.floor(Math.random() * funnyTexts.length)];
+
+            if(dodgeCount === 3) mainTitle.innerText = "Are you sure? 🥺";
+            if(dodgeCount === 6) mainTitle.innerText = "Please click NO! ❤️";
+            if(dodgeCount === 10) mainTitle.innerText = "You're too fast! ⚡";
+
+            const x = Math.random() * (window.innerWidth - yesBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - yesBtn.offsetHeight);
+
+            yesBtn.style.position = 'fixed';
+            yesBtn.style.left = x + 'px';
+            yesBtn.style.top = y + 'px';
+            yesBtn.style.zIndex = '1000';
+        }
+
+        yesBtn.addEventListener('mouseover', dodge);
+        yesBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            dodge();
+        });
+
+        noBtn.addEventListener('click', () => {
+            questionSection.style.opacity = '0';
+            questionSection.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                questionSection.classList.add('hidden');
+                infoSection.classList.remove('hidden');
+                infoSection.style.opacity = '1';
+            }, 300);
+        });
+
+        submitBtn.addEventListener('click', () => {
+            tadaSound.play().catch(() => {});
+            confetti({
+                particleCount: 200,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#ff2d75', '#ff6b9d', '#ffffff', '#ffb3c1']
+            });
+
+            infoSection.style.opacity = '0';
+            setTimeout(() => {
+                infoSection.classList.add('hidden');
+                finalSection.classList.remove('hidden');
+                finalSection.style.opacity = '1';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
